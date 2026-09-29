@@ -4,9 +4,8 @@
 
 Pangasinan Trails
 
-## Student Name
-
-Your Name
+#Name
+Abegel E. Codiamat
 
 ## Selected Framework
 
@@ -44,8 +43,8 @@ Pangasinan Trails is a mobile-first tourism and heritage website designed to hel
 
 ## Live Website
 
-[GitHub Pages URL will be added after deployment]
+https://abegelcodiamat.github.io/pangasinan-trails/
 
 ## Repository
 
-[GitHub Repository URL]
+https://github.com/abegelcodiamat/pangasinan-trails
