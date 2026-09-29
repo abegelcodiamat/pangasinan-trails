@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+const BASE_PATH = "/pangasinan-trails";
+
 export default function SiteImage({
   src,
   alt,
@@ -7,9 +9,13 @@ export default function SiteImage({
   height = 600,
   className = "",
 }) {
+  const imageSrc = src.startsWith(BASE_PATH)
+    ? src
+    : `${BASE_PATH}${src}`;
+
   return (
     <Image
-      src={src}
+      src={imageSrc}
       alt={alt}
       width={width}
       height={height}

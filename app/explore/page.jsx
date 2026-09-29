@@ -5,15 +5,14 @@ import { useSearchParams } from "next/navigation";
 
 import SearchForm from "@/components/molecules/SearchForm";
 import HeritageGrid from "@/components/organisms/HeritageGrid";
-import { destinations } from "@/data/destinations";
+
+import destinations from "@/data/destinations";
 
 const categories = [
   "All",
   "Beach",
   "Nature",
-  "History",
-  "Culture",
-  "Agriculture",
+  "Heritage",
 ];
 
 function ExploreContent() {
@@ -23,21 +22,19 @@ function ExploreContent() {
   const [category, setCategory] = useState("All");
 
   useEffect(() => {
-    const urlCategory = searchParams.get("category");
+    const categoryFromUrl = searchParams.get("category");
 
-    if (urlCategory && categories.includes(urlCategory)) {
-      setCategory(urlCategory);
+    if (categoryFromUrl && categories.includes(categoryFromUrl)) {
+      setCategory(categoryFromUrl);
     }
   }, [searchParams]);
 
   const filteredDestinations = useMemo(() => {
     return destinations.filter((destination) => {
-      const searchText = search.toLowerCase();
-
       const matchesSearch =
-        destination.name.toLowerCase().includes(searchText) ||
-        destination.description.toLowerCase().includes(searchText) ||
-        destination.location.toLowerCase().includes(searchText);
+        destination.name.toLowerCase().includes(search.toLowerCase()) ||
+        destination.location.toLowerCase().includes(search.toLowerCase()) ||
+        destination.description.toLowerCase().includes(search.toLowerCase());
 
       const matchesCategory =
         category === "All" || destination.category === category;
@@ -47,27 +44,23 @@ function ExploreContent() {
   }, [search, category]);
 
   return (
-    <main className="min-h-screen bg-[#F8FAF9]">
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-
-        {/* Page heading */}
+    <main className="min-h-screen bg-[#F8FAF9] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1F2937]">
+          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
             Explore Pangasinan
           </h1>
 
-          <p className="mt-2 text-[#6B7280]">
-            Discover beaches, natural attractions, cultural landmarks,
-            historical places, and agricultural destinations.
+          <p className="mt-2 max-w-2xl text-gray-600">
+            Discover beaches, natural attractions, and heritage destinations
+            across Pangasinan.
           </p>
         </div>
 
-        {/* Search */}
-        <div className="mb-8">
+        <div className="mb-6">
           <SearchForm onSearch={setSearch} />
         </div>
 
-        {/* Categories */}
         <div className="mb-8 flex flex-wrap gap-2">
           {categories.map((item) => (
             <button
@@ -77,7 +70,7 @@ function ExploreContent() {
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 category === item
                   ? "bg-teal-700 text-white"
-                  : "border border-gray-200 bg-white text-gray-700 hover:bg-teal-50"
+                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
               }`}
             >
               {item}
@@ -85,41 +78,35 @@ function ExploreContent() {
           ))}
         </div>
 
-        {/* Results */}
         {filteredDestinations.length > 0 ? (
           <HeritageGrid destinations={filteredDestinations} />
         ) : (
-          <div className="rounded-lg bg-white p-10 text-center">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
+            <h2 className="text-lg font-semibold text-gray-900">
               No destinations found
             </h2>
 
-            <p className="mt-2 text-gray-500">
-              Try a different search term or category.
+            <p className="mt-2 text-sm text-gray-600">
+              Try another search term or category.
             </p>
           </div>
         )}
-
-      </section>
-    </main>
-  );
-}
-
-function ExploreLoading() {
-  return (
-    <main className="min-h-screen bg-[#F8FAF9]">
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <p className="text-gray-500">
-          Loading destinations...
-        </p>
-      </section>
+      </div>
     </main>
   );
 }
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={<ExploreLoading />}>
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#F8FAF9] px-4 py-10">
+          <div className="mx-auto max-w-7xl">
+            Loading destinations...
+          </div>
+        </main>
+      }
+    >
       <ExploreContent />
     </Suspense>
   );
