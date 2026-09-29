@@ -3,9 +3,8 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import HeaderNavigation from "@/components/organisms/HeaderNavigation";
-import HeritageGrid from "@/components/organisms/HeritageGrid";
 import SearchForm from "@/components/molecules/SearchForm";
+import HeritageGrid from "@/components/organisms/HeritageGrid";
 import { destinations } from "@/data/destinations";
 
 const categories = [
@@ -33,10 +32,12 @@ function ExploreContent() {
 
   const filteredDestinations = useMemo(() => {
     return destinations.filter((destination) => {
+      const searchText = search.toLowerCase();
+
       const matchesSearch =
-        destination.name.toLowerCase().includes(search.toLowerCase()) ||
-        destination.description.toLowerCase().includes(search.toLowerCase()) ||
-        destination.location.toLowerCase().includes(search.toLowerCase());
+        destination.name.toLowerCase().includes(searchText) ||
+        destination.description.toLowerCase().includes(searchText) ||
+        destination.location.toLowerCase().includes(searchText);
 
       const matchesCategory =
         category === "All" || destination.category === category;
@@ -48,6 +49,8 @@ function ExploreContent() {
   return (
     <main className="min-h-screen bg-[#F8FAF9]">
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+
+        {/* Page heading */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#1F2937]">
             Explore Pangasinan
@@ -59,14 +62,12 @@ function ExploreContent() {
           </p>
         </div>
 
-        <div className="mb-6">
-          <SearchForm
-            value={search}
-            onChange={setSearch}
-            placeholder="Search destinations..."
-          />
+        {/* Search */}
+        <div className="mb-8">
+          <SearchForm onSearch={setSearch} />
         </div>
 
+        {/* Categories */}
         <div className="mb-8 flex flex-wrap gap-2">
           {categories.map((item) => (
             <button
@@ -75,8 +76,8 @@ function ExploreContent() {
               onClick={() => setCategory(item)}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 category === item
-                  ? "bg-[#0F766E] text-white"
-                  : "bg-white text-[#1F2937] border border-[#E5E7EB] hover:bg-[#E8F5F2]"
+                  ? "bg-teal-700 text-white"
+                  : "border border-gray-200 bg-white text-gray-700 hover:bg-teal-50"
               }`}
             >
               {item}
@@ -84,19 +85,21 @@ function ExploreContent() {
           ))}
         </div>
 
+        {/* Results */}
         {filteredDestinations.length > 0 ? (
           <HeritageGrid destinations={filteredDestinations} />
         ) : (
           <div className="rounded-lg bg-white p-10 text-center">
-            <h2 className="text-xl font-semibold text-[#1F2937]">
+            <h2 className="text-xl font-semibold text-gray-800">
               No destinations found
             </h2>
 
-            <p className="mt-2 text-[#6B7280]">
+            <p className="mt-2 text-gray-500">
               Try a different search term or category.
             </p>
           </div>
         )}
+
       </section>
     </main>
   );
@@ -105,8 +108,10 @@ function ExploreContent() {
 function ExploreLoading() {
   return (
     <main className="min-h-screen bg-[#F8FAF9]">
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <p className="text-[#6B7280]">Loading destinations...</p>
+      <section className="mx-auto max-w-7xl px-4 py-12">
+        <p className="text-gray-500">
+          Loading destinations...
+        </p>
       </section>
     </main>
   );
